@@ -1,0 +1,49 @@
+name: 'Tofu Format'
+description: 'A GitHub Action to run tofu fmt with all supported options.'
+author: 'dnogu'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
+
+inputs:
+  working-directory:
+    description: 'The directory in which to run tofu fmt.'
+    required: false
+    default: '.'
+  target:
+    description: 'Target files or directories to format. If not specified, formats current directory.'
+    required: false
+    default: ''
+  list:
+    description: 'List files with formatting inconsistencies (--list=true|false).'
+    required: false
+    default: 'true'
+  write:
+    description: 'Write result to source file instead of stdout (--write=true|false).'
+    required: false
+    default: 'true'
+  diff:
+    description: 'Display diff of formatting changes (--diff).'
+    required: false
+    default: 'false'
+  check:
+    description: 'Check if input is formatted (--check). Exit status non-zero if not formatted.'
+    required: false
+    default: 'false'
+  recursive:
+    description: 'Also process files in subdirectories (--recursive).'
+    required: false
+    default: 'false'
+
+outputs:
+  fmt-output:
+    description: 'The output from tofu fmt.'
+  needs-formatting:
+    description: 'Boolean indicating if any files needed formatting.'
+  formatted-files:
+    description: 'List of files that were formatted or need formatting.'
+
+branding:
+  icon: 'code'
+  color: 'blue'

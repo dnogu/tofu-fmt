@@ -1,0 +1,69 @@
+name: OpenTofu Format Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  format-check:
+    name: Check OpenTofu Format
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup OpenTofu
+      uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_version: latest
+        
+    - name: Check OpenTofu format
+      uses: dnogu/github-tofu-fmt@main
+      with:
+        working-directory: .
+        check: true
+        diff: true
+        recursive: true
+
+  format-and-commit:
+    name: Format and Commit
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup OpenTofu
+      uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_version: latest
+        
+    - name: Format OpenTofu files
+      id: fmt
+      uses: dnogu/github-tofu-fmt@v1
+      with:
+        working-directory: .
+        write: true
+        diff: true
+        recursive: true
+        
+    - name: Commit formatted files
+      if: steps.fmt.outputs.needs-formatting == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Auto-format OpenTofu files with tofu fmt
+        
+        [skip ci]"
+        git push
