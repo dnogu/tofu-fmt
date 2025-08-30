@@ -1,0 +1,67 @@
+name: CI - Test Tofu Format Action
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Run linting
+      run: npm run lint
+      
+    - name: Build action
+      run: npm run build
+
+  test-action:
+    name: Test Action with OpenTofu
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup OpenTofu
+      uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_version: latest
+        
+    - name: Test formatting check
+      uses: ./
+      with:
+        working-directory: __tests__/fixtures
+        check: true
+        diff: true
+        recursive: false
+        
+    - name: Test formatting with write
+      uses: ./
+      with:
+        working-directory: __tests__/fixtures
+        write: true
+        list: false
+        target: main.tf
