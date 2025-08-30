@@ -83,7 +83,7 @@ describe('OpenTofu Format Action Tests', () => {
         diff: 'true',
         recursive: 'true'
       };
-      expect(buildTofuFmtCommand(inputs)).toBe('tofu fmt --check --diff --recursive');
+      expect(buildTofuFmtCommand(inputs)).toBe('tofu fmt --diff --check --recursive');
     });
 
     test('should handle complex command with all options', () => {
@@ -133,7 +133,7 @@ describe('OpenTofu Format Action Tests', () => {
         invalidOption: 'should-be-ignored',
         target: 'main.tf'
       };
-      expect(buildTofuFmtCommand(inputs)).toBe('tofu fmt --check --diff main.tf');
+      expect(buildTofuFmtCommand(inputs)).toBe('tofu fmt --diff --check main.tf');
     });
 
     test('should handle all false values', () => {
