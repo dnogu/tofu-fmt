@@ -25,7 +25,7 @@ jobs:
         tofu_version: latest
         
     - name: Check OpenTofu format
-      uses: dnogu/tofu-fmt@initial
+      uses: ./
       with:
         working-directory: .
         check: true
@@ -50,7 +50,7 @@ jobs:
         
     - name: Format OpenTofu files
       id: fmt
-      uses: dnogu/tofu-fmt@initial
+      uses: ./
       with:
         working-directory: .
         write: true

@@ -22,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Format OpenTofu files
-        uses: dnogu/github-tofu-fmt@v1
+        uses: dnogu/tofu-fmt@v1
         with:
           working-directory: ./infra
           check: true
